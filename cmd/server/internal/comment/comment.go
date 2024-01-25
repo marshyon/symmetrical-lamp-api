@@ -2,7 +2,13 @@ package comment
 
 import (
 	"context"
+	"errors"
 	"fmt"
+)
+
+var (
+	ErrFetchingComment = errors.New("failed to fetche command by id")
+	ErrNotImplemented  = errors.New("not implemented")
 )
 
 // Comment - represents a comment
@@ -38,8 +44,20 @@ func (s *Service) GetComment(ctx context.Context, id string) (Comment, error) {
 	cmt, err := s.Store.GetComment(ctx, id)
 	if err != nil {
 		fmt.Println(err)
-		return cmt, err
+		return cmt, ErrFetchingComment
 	}
 
 	return Comment{}, nil
+}
+
+func (s *Service) UpdateComment(ctx context.Context, cmd Comment) error {
+	return ErrNotImplemented
+}
+
+func (s *Service) DeleteComment(ctx context.Context, id string) error {
+	return ErrNotImplemented
+}
+
+func (s *Service) CreateComment(ctx context.Context, cmt Comment) (Comment, error) {
+	return Comment{}, ErrNotImplemented
 }
