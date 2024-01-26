@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrFetchingComment = errors.New("failed to fetche command by id")
+	ErrFetchingComment = errors.New("failed to fetch comment by id")
 	ErrNotImplemented  = errors.New("not implemented")
 )
 
@@ -47,7 +47,7 @@ func (s *Service) GetComment(ctx context.Context, id string) (Comment, error) {
 		return cmt, ErrFetchingComment
 	}
 
-	return Comment{}, nil
+	return cmt, nil
 }
 
 func (s *Service) UpdateComment(ctx context.Context, cmd Comment) error {

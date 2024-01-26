@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/marshyon/symmetrical-lamp-api/cmd/server/internal/comment"
 	"github.com/marshyon/symmetrical-lamp-api/cmd/server/internal/db"
 )
 
@@ -17,11 +18,23 @@ func Run() error {
 		fmt.Println("Error connecting to db")
 		return err
 	}
-	if err := db.Ping(context.Background()); err != nil {
-		fmt.Println("Error pinging db")
+
+	if err := db.MigrateDB(); err != nil {
+		fmt.Println("Error migrating db")
 		return err
 	}
-	fmt.Println("Connected to db")
+
+	cmtService := comment.NewService(db)
+
+	cm, err := cmtService.GetComment(
+		context.Background(),
+		"602d7576-bc5c-11ee-8e50-00155dd54b61",
+	)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	fmt.Printf("====>[%+v]\n", cm.ID)
 
 	return nil
 }
