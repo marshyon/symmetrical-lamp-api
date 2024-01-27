@@ -24,6 +24,9 @@ type Comment struct {
 // that the service needs to operate
 type Store interface {
 	GetComment(context.Context, string) (Comment, error)
+	PostComment(context.Context, Comment) (Comment, error)
+	DeleteComment(context.Context, string) error
+	UpdateComment(ctx context.Context, id string, cmt Comment) (Comment, error)
 }
 
 // Service - the struct on which all the
@@ -50,14 +53,29 @@ func (s *Service) GetComment(ctx context.Context, id string) (Comment, error) {
 	return cmt, nil
 }
 
-func (s *Service) UpdateComment(ctx context.Context, cmd Comment) error {
-	return ErrNotImplemented
+func (s *Service) UpdateComment(
+	ctx context.Context,
+	ID string,
+	updatedComment Comment,
+) (Comment, error) {
+	cmt, err := s.Store.UpdateComment(ctx, ID, updatedComment)
+	if err != nil {
+		fmt.Println("error updating comment in service")
+		return Comment{}, err
+	}
+	return cmt, nil
 }
 
 func (s *Service) DeleteComment(ctx context.Context, id string) error {
-	return ErrNotImplemented
+	return s.Store.DeleteComment(ctx, id)
 }
 
-func (s *Service) CreateComment(ctx context.Context, cmt Comment) (Comment, error) {
-	return Comment{}, ErrNotImplemented
+func (s *Service) PostComment(ctx context.Context, cmt Comment) (Comment, error) {
+	insertedCmt, err := s.Store.PostComment(ctx, cmt)
+	if err != nil {
+		fmt.Println(err)
+		return Comment{}, err
+	}
+
+	return insertedCmt, nil
 }
