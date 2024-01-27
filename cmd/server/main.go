@@ -1,11 +1,11 @@
 package main
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/marshyon/symmetrical-lamp-api/cmd/server/internal/comment"
 	"github.com/marshyon/symmetrical-lamp-api/cmd/server/internal/db"
+	transportHTTP "github.com/marshyon/symmetrical-lamp-api/cmd/server/internal/transport/http"
 )
 
 // Run - is going to be responsible for
@@ -26,32 +26,38 @@ func Run() error {
 
 	cmtService := comment.NewService(db)
 
-	cm, err := cmtService.PostComment(
-		context.Background(),
-		comment.Comment{
-			ID:     "ce598448-bd26-11ee-bf2a-00155dd54b62",
-			Slug:   "manual testing 123 ...",
-			Author: "Marshyon",
-			Body:   "a boo a boo a bibbly booby boo ...",
-		},
-	)
-
-	if err != nil {
-		fmt.Println(err)
+	httphandler := transportHTTP.NewHandler(cmtService)
+	if err := httphandler.Serve(); err != nil {
+		fmt.Println("Error starting server")
 		return err
 	}
 
-	fmt.Printf("result of a created comment ====>[%+v]\n", cm)
+	// cm, err := cmtService.PostComment(
+	// 	context.Background(),
+	// 	comment.Comment{
+	// 		ID:     "ce598448-bd26-11ee-bf2a-00155dd54b62",
+	// 		Slug:   "manual testing 123 ...",
+	// 		Author: "Marshyon",
+	// 		Body:   "a boo a boo a bibbly booby boo ...",
+	// 	},
+	// )
 
-	cm, err = cmtService.GetComment(
-		context.Background(),
-		"602d7576-bc5c-11ee-8e50-00155dd54b61",
-	)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	fmt.Printf("====>[%+v]\n", cm.ID)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return err
+	// }
+
+	// fmt.Printf("result of a created comment ====>[%+v]\n", cm)
+
+	// cm, err = cmtService.GetComment(
+	// 	context.Background(),
+	// 	"602d7576-bc5c-11ee-8e50-00155dd54b61",
+	// )
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return err
+	// }
+	// fmt.Printf("====>[%+v]\n", cm.ID)
 
 	return nil
 }

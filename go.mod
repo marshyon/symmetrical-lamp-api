@@ -11,6 +11,7 @@ require golang.org/x/sys v0.15.0 // indirect
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.17.0 // indirect
+	github.com/gorilla/mux v1.8.1
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/mattn/go-sqlite3 v1.14.16 // indirect
