@@ -24,6 +24,10 @@ func NewHandler(service CommentService) *Handler {
 
 	h.Router = mux.NewRouter()
 	h.mapRoutes()
+	h.Router.Use(JSONMiddleware)
+	h.Router.Use(LoggingMiddleware)
+	h.Router.Use(TimeoutMiddleware)
+
 	h.Server = &http.Server{
 		Addr:    "0.0.0.0:8080",
 		Handler: h.Router,
@@ -33,7 +37,6 @@ func NewHandler(service CommentService) *Handler {
 
 func (h *Handler) mapRoutes() {
 	h.Router.HandleFunc("/howdyhoos", func(w http.ResponseWriter, r *http.Request) {
-
 		w.Write([]byte("howdyhoos"))
 	})
 

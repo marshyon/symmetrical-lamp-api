@@ -11,7 +11,7 @@ import (
 // Run - is going to be responsible for
 // instantiating the server and running it
 func Run() error {
-	fmt.Println("Running server...")
+	fmt.Println("Starting server...")
 
 	db, err := db.NewDatabase()
 	if err != nil {
