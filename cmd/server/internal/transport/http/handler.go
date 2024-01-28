@@ -11,8 +11,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type CommentService interface{}
-
 type Handler struct {
 	Router  *mux.Router
 	Service CommentService
@@ -23,16 +21,7 @@ func NewHandler(service CommentService) *Handler {
 	h := &Handler{
 		Service: service,
 	}
-	// h.Router = mux.NewRouter()
-	// h.mapRoutes()
-	// h.Router.Use(JSONMiddleware)
-	// h.Router.Use(LoggingMiddleware)
-	// h.Router.Use(TimeoutMiddleware)
 
-	// h.Server = &http.Server{
-	// 	Addr:    "0.0.0.0:8080",
-	// 	Handler: h.Router,
-	// }
 	h.Router = mux.NewRouter()
 	h.mapRoutes()
 	h.Server = &http.Server{
@@ -47,6 +36,12 @@ func (h *Handler) mapRoutes() {
 
 		w.Write([]byte("howdyhoos"))
 	})
+
+	h.Router.HandleFunc("/api/v1/comment", h.PostComment).Methods("POST")
+	h.Router.HandleFunc("/api/v1/comment/{id}", h.GetComment).Methods("GET")
+	h.Router.HandleFunc("/api/v1/comment/{id}", h.UpdateComment).Methods("PUT")
+	h.Router.HandleFunc("/api/v1/comment/{id}", h.DeleteComment).Methods("DELETE")
+
 }
 
 func (h *Handler) Serve() error {
@@ -69,13 +64,3 @@ func (h *Handler) Serve() error {
 
 	return nil
 }
-
-// h.Router.HandleFunc("/alive", func(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Fprintf(w, "I am alive")
-// })
-
-// h.Router.HandleFunc("/api/v1/comment", JWTAuth(h.PostComment)).Methods("POST")
-// h.Router.HandleFunc("/api/v1/comment/{id}", h.GetComment).Methods("GET")
-// h.Router.HandleFunc("/api/v1/comment/{id}", JWTAuth(h.UpdateComment)).Methods("PUT")
-// h.Router.HandleFunc("/api/v1/comment/{id}", JWTAuth(h.DeleteComment)).Methods("DELETE")
-// }

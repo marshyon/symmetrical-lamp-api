@@ -26,38 +26,14 @@ func Run() error {
 
 	cmtService := comment.NewService(db)
 
+	// this uses a named import called httpHandler that
+	// imports internal/transport/http !!!
+	// it is also depencency injected with the comment service
 	httphandler := transportHTTP.NewHandler(cmtService)
 	if err := httphandler.Serve(); err != nil {
 		fmt.Println("Error starting server")
 		return err
 	}
-
-	// cm, err := cmtService.PostComment(
-	// 	context.Background(),
-	// 	comment.Comment{
-	// 		ID:     "ce598448-bd26-11ee-bf2a-00155dd54b62",
-	// 		Slug:   "manual testing 123 ...",
-	// 		Author: "Marshyon",
-	// 		Body:   "a boo a boo a bibbly booby boo ...",
-	// 	},
-	// )
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return err
-	// }
-
-	// fmt.Printf("result of a created comment ====>[%+v]\n", cm)
-
-	// cm, err = cmtService.GetComment(
-	// 	context.Background(),
-	// 	"602d7576-bc5c-11ee-8e50-00155dd54b61",
-	// )
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return err
-	// }
-	// fmt.Printf("====>[%+v]\n", cm.ID)
 
 	return nil
 }
